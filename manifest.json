@@ -1,5 +1,5 @@
 {
-    "id": "/index.html",
+  "id": "/index.html",
   "name": "Quotes Verse",
   "short_name": "QuotesVerse",
   "start_url": "./index.html",
@@ -31,5 +31,11 @@
       "type": "image/png",
       "form_factor": "wide"
     }
+  ],
+  "description": "quotes application",
+  "lang": "en",
+  "orientation": "portrait",
+  "categories": [
+    "lifestyle"
   ]
 }
