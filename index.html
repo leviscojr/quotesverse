@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>InspireMe — Home</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-home">
+  <div class="container">
+    <header class="top">
+      <h1>✨ InspireMe ✨</h1>
+      <div class="top-actions">
+        <button id="favoritesHomeBtn" class="pill">❤️ Favorites</button>
+      </div>
+    </header>
+
+    <!-- General Quote -->
+    <main>
+      <section class="home-quote">
+        <div id="homeQuote" class="quote-box fade-slide">Welcome — tap Next for inspiration!</div>
+        <div class="controls">
+          <button id="homeNext" class="cta">Next Quote</button>
+        </div>
+      </section>
+
+      <hr class="divider">
+
+      <section>
+        <h2>Select a category</h2>
+        <div class="categories" id="categoriesList">
+          <button class="category" data-category="motivation">💪 Motivation & Perseverance</button>
+          <button class="category" data-category="love">❤️ Love & Relationships</button>
+          <button class="category" data-category="wisdom">🧠 Wisdom & Life Lessons</button>
+          <button class="category" data-category="success">🏆 Success & Ambition</button>
+          <button class="category" data-category="mindset">🧘 Mindset & Discipline</button>
+          <button class="category" data-category="leadership">👑 Leadership & Influence</button>
+          <button class="category" data-category="courage">🌍 Change & Courage</button>
+          <button class="category" data-category="work">💼 Work & Productivity</button>
+          <button class="category" data-category="creativity">✨ Creativity & Passion</button>
+          <button class="category" data-category="happiness">☀️ Happiness & Positivity</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="quotes.js"></script>
+  <script>
+    // Home page logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const homeQuoteEl = document.getElementById('homeQuote');
+      const homeNextBtn = document.getElementById('homeNext');
+      const favoritesHomeBtn = document.getElementById('favoritesHomeBtn');
+
+      // Background animator for home (calm blues/purples)
+      const homeGradients = [
+        ['#2b5876','#4e4376'],
+        ['#3a1c71','#d76d77'],
+        ['#2c3e50','#4ca1af'],
+        ['#334d50','#0f3443']
+      ];
+      const homeBg = new BackgroundAnimator('page-home', homeGradients, {speed: 12000});
+
+      function showHomeQuote() {
+        const q = getRandomFromAll(); // from quotes.js
+        fadeReplace(homeQuoteEl, q);
+        homeBg.pulse(); // faster color pulse on action
+      }
+
+      // category buttons -> store and open quotes.html
+      document.querySelectorAll('.category').forEach(btn => {
+        btn.addEventListener('click', () => {
+          localStorage.setItem('selectedCategory', btn.dataset.category);
+          window.location.href = 'quotes.html';
+        });
+      });
+
+      // favorites button
+      favoritesHomeBtn.addEventListener('click', () => {
+        window.location.href = 'favorites.html';
+      });
+
+      homeNextBtn.addEventListener('click', showHomeQuote);
+
+      // initial
+      showHomeQuote();
+    });
+
+    // small helper used by pages
+    function fadeReplace(el, text) {
+      el.classList.remove('fade-slide');
+      void el.offsetWidth; // reflow
+      el.textContent = text;
+      el.classList.add('fade-slide');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>InspireMe — Favorites</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-favs">
+  <div class="container">
+    <header class="top">
+      <h1>❤️ Your Favorites</h1>
+      <div class="top-actions">
+        <button id="homeFromFavs" class="pill">🏠 Home</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="favoritesContainer" class="favorites-list">
+        <!-- favorite quotes injected here -->
+      </div>
+      <div class="fav-actions">
+        <button id="clearAll" class="pill">🗑️ Clear All</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="quotes.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('favoritesContainer');
+      const homeBtn = document.getElementById('homeFromFavs');
+      const clearAll = document.getElementById('clearAll');
+
+      // Background animator for favorites (warm glow)
+      const favGradients = [
+        ['#ff9a9e','#fecfef'],
+        ['#f6d365','#fda085'],
+        ['#fbc2eb','#a6c1ee']
+      ];
+      const favBg = new BackgroundAnimator('page-favs', favGradients, {speed: 10000});
+
+      function renderFavorites() {
+        const favs = getFavorites(); // from quotes.js
+        if (!favs.length) {
+          container.innerHTML = '<p class="muted">No favorites yet — add some ❤️</p>';
+          return;
+        }
+        container.innerHTML = favs.map(q => `
+          <div class="fav-card">
+            <div class="fav-text">“${q}”</div>
+            <div class="fav-actions">
+              <button class="pill remove" data-quote="${escapeHtml(q)}">Remove</button>
+            </div>
+          </div>
+        `).join('');
+        // attach listeners
+        container.querySelectorAll('.remove').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const q = btn.dataset.quote;
+            removeFavorite(unescapeHtml(q));
+            renderFavorites();
+          });
+        });
+      }
+
+      homeBtn.addEventListener('click', () => window.location.href = 'index.html');
+      clearAll.addEventListener('click', () => {
+        localStorage.removeItem('favorites');
+        renderFavorites();
+      });
+
+      renderFavorites();
+
+      // small helpers for safe data attributes
+      function escapeHtml(s){ return s.replace(/"/g,'&quot;').replace(/'/g,"&#39;"); }
+      function unescapeHtml(s){ return s.replace(/&quot;/g, '"').replace(/&#39;/g, "'"); }
+    });
+  </script>
+</body>
+</html>
