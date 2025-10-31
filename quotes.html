@@ -44,6 +44,7 @@
       width: 90%;
       max-width: 450px;
       animation: fadeIn 1s ease;
+      position: relative;
     }
 
     @keyframes fadeIn {
@@ -84,6 +85,7 @@
       font-size: 1.5rem;
       cursor: pointer;
       transition: 0.3s;
+      user-select: none;
     }
 
     .icon-btn:hover {
@@ -91,7 +93,39 @@
       text-shadow: 0 0 10px var(--neon1);
     }
 
-    .next-btn {
+    .heart.liked {
+      color: #ff3366;
+      text-shadow: 0 0 15px #ff3366, 0 0 30px #ff6699;
+      animation: heartPop 0.5s ease;
+    }
+
+    @keyframes heartPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.6); }
+      100% { transform: scale(1.1); }
+    }
+
+    .toast {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: all 0.5s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      bottom: 10px;
+      opacity: 1;
+    }
+
+    .next-btn, .all-btn {
       background: linear-gradient(45deg, var(--neon1), var(--neon2));
       border: none;
       border-radius: 50px;
@@ -101,9 +135,10 @@
       cursor: pointer;
       box-shadow: 0 0 15px var(--neon1);
       transition: all 0.3s ease;
+      margin: 0.3rem;
     }
 
-    .next-btn:hover {
+    .next-btn:hover, .all-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 0 25px var(--neon2);
     }
@@ -127,12 +162,6 @@
       box-shadow: 0 0 10px var(--neon3);
     }
 
-    .heart.liked {
-      color: red;
-      text-shadow: 0 0 10px red;
-      transform: scale(1.3);
-    }
-
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
@@ -141,7 +170,6 @@
     .next-btn {
       animation: pulse 2.5s infinite ease-in-out;
     }
-
   </style>
 </head>
 <body>
@@ -159,6 +187,9 @@
     </div>
 
     <button class="next-btn" onclick="nextQuote()">Next Quote</button>
+    <button class="all-btn" onclick="showAllQuotes()">All Quotes</button>
+
+    <div id="toast" class="toast">Added to Favorites!</div>
   </div>
 
   <script>
@@ -173,6 +204,7 @@
     const quoteEl = document.getElementById("quote");
     const authorEl = document.getElementById("author");
     const categoryEl = document.getElementById("category");
+    const toast = document.getElementById("toast");
     let current = 0;
 
     function renderQuote(i) {
@@ -180,7 +212,6 @@
       quoteEl.style.opacity = 0;
       authorEl.style.opacity = 0;
       categoryEl.style.opacity = 0;
-
       setTimeout(() => {
         quoteEl.textContent = `"${q.text}"`;
         authorEl.textContent = `- ${q.author}`;
@@ -198,11 +229,12 @@
 
     function toggleLike(el) {
       el.classList.toggle("liked");
+      showToast(el.classList.contains("liked") ? "💖 Added to Favorites!" : "💔 Removed from Favorites!");
     }
 
     function copyQuote() {
       navigator.clipboard.writeText(`${quoteEl.textContent} ${authorEl.textContent}`);
-      alert("Quote copied!");
+      showToast("📋 Quote copied!");
     }
 
     function shareQuote() {
@@ -213,8 +245,19 @@
           url: window.location.href,
         });
       } else {
-        alert("Sharing not supported on this device.");
+        showToast("⚠️ Sharing not supported!");
       }
+    }
+
+    function showAllQuotes() {
+      let all = quotes.map(q => `${q.category}\n${q.text}\n${q.author}`).join("\n\n");
+      alert(all);
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1500);
     }
   </script>
 </body>
