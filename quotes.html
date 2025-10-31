@@ -1,268 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuotesVerse</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --neon1: #ff00ff;
-      --neon2: #00ffff;
-      --neon3: #ff8c00;
-      --bg1: #12071f;
-      --text: #ffffff;
-    }
-
     body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      height: 100vh;
+      background: radial-gradient(circle at top left, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: var(--text);
-      background: linear-gradient(135deg, #1b0034, #000428);
-      animation: gradientShift 10s ease infinite alternate;
-      background-size: 200% 200%;
-      overflow: hidden;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-
-    .container {
-      text-align: center;
+    .quote-box {
       background: rgba(255, 255, 255, 0.1);
-      padding: 2rem;
+      border: 2px solid #00fff0;
       border-radius: 20px;
-      box-shadow: 0 0 30px rgba(255,255,255,0.2);
-      backdrop-filter: blur(8px);
+      padding: 30px;
       width: 90%;
-      max-width: 450px;
-      animation: fadeIn 1s ease;
-      position: relative;
+      max-width: 600px;
+      box-shadow: 0 0 30px #00fff0;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
+    .quote-text {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: #fff;
+      text-shadow: 0 0 10px #00e6ff, 0 0 20px #00e6ff;
     }
 
     .category {
-      font-weight: 600;
-      color: var(--neon2);
-      text-shadow: 0 0 8px var(--neon2);
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      color: #ff77ff;
+      text-shadow: 0 0 5px #ff00ff;
+      margin-bottom: 15px;
     }
 
-    .quote {
-      font-size: 1.3rem;
-      line-height: 1.6;
-      margin-bottom: 1rem;
-      color: #fff;
-      text-shadow: 0 0 8px rgba(255,255,255,0.3);
-    }
-
-    .author {
-      color: var(--neon3);
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .icon-btn {
-      font-size: 1.5rem;
+    .btn {
+      background: none;
+      border: 2px solid #00fff0;
+      color: #00fff0;
+      padding: 10px 25px;
+      border-radius: 25px;
+      margin: 10px;
       cursor: pointer;
+      font-size: 1rem;
       transition: 0.3s;
-      user-select: none;
+      box-shadow: 0 0 10px #00fff0;
     }
 
-    .icon-btn:hover {
-      transform: scale(1.2);
-      text-shadow: 0 0 10px var(--neon1);
+    .btn:hover {
+      background: #00fff0;
+      color: #121212;
+      box-shadow: 0 0 25px #00fff0;
+    }
+
+    .heart {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, color 0.3s ease;
     }
 
     .heart.liked {
-      color: #ff3366;
-      text-shadow: 0 0 15px #ff3366, 0 0 30px #ff6699;
-      animation: heartPop 0.5s ease;
+      color: #ff007f;
+      transform: scale(1.4);
+      text-shadow: 0 0 20px #ff007f;
     }
 
-    @keyframes heartPop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.6); }
-      100% { transform: scale(1.1); }
+    #favMsg {
+      color: #00ffcc;
+      font-size: 1rem;
+      margin-top: 10px;
+      display: none;
     }
 
-    .toast {
-      position: absolute;
-      bottom: -50px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.6);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      opacity: 0;
-      transition: all 0.5s ease;
-      pointer-events: none;
-    }
-
-    .toast.show {
-      bottom: 10px;
-      opacity: 1;
-    }
-
-    .next-btn, .random-btn {
-      background: linear-gradient(45deg, var(--neon1), var(--neon2));
-      border: none;
-      border-radius: 50px;
-      color: white;
-      font-weight: 600;
-      padding: 0.8rem 2rem;
-      cursor: pointer;
-      box-shadow: 0 0 15px var(--neon1);
-      transition: all 0.3s ease;
-      margin: 0.3rem;
-    }
-
-    .next-btn:hover, .random-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px var(--neon2);
-    }
-
-    .back-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: transparent;
-      border: 2px solid var(--neon3);
-      color: var(--neon3);
-      padding: 0.4rem 0.8rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .back-btn:hover {
-      background: var(--neon3);
-      color: #000;
-      box-shadow: 0 0 10px var(--neon3);
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    .next-btn {
-      animation: pulse 2.5s infinite ease-in-out;
+    @keyframes glow {
+      0% { text-shadow: 0 0 5px #00fff0; }
+      50% { text-shadow: 0 0 20px #00fff0; }
+      100% { text-shadow: 0 0 5px #00fff0; }
     }
   </style>
 </head>
 <body>
-  <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
 
-  <div class="container">
-    <div class="category" id="category">💬 Motivation</div>
-    <div class="quote" id="quote">"The harder you work for something, the greater you’ll feel when you achieve it."</div>
-    <div class="author" id="author">- Unknown</div>
-
-    <div class="buttons">
-      <span class="icon-btn heart" onclick="toggleLike(this)">❤️</span>
-      <span class="icon-btn" onclick="copyQuote()">📋</span>
-      <span class="icon-btn" onclick="shareQuote()">📤</span>
+  <div class="quote-box">
+    <div class="category" id="category">Motivational</div>
+    <div class="quote-text" id="quote">"Stay hungry, stay foolish."</div>
+    <div>
+      <button class="btn" id="nextBtn">Next Quote</button>
+      <button class="btn" id="randomBtn">Random Quote</button>
     </div>
-
-    <button class="next-btn" onclick="nextQuote()">Next Quote</button>
-    <button class="random-btn" onclick="randomQuote()">Random Quote</button>
-
-    <div id="toast" class="toast">Added to Favorites!</div>
+    <div class="heart" id="heart">❤️</div>
+    <div id="favMsg">💖 Added to Favorites!</div>
   </div>
 
   <script>
-    const quotes = [
-      { category: "💪 Motivation", text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
-      { category: "❤️ Love", text: "Love doesn’t make the world go round. Love is what makes the ride worthwhile.", author: "Franklin P. Jones" },
-      { category: "🏆 Success", text: "Don’t watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
-      { category: "🧘 Peace", text: "Inner peace begins the moment you choose not to allow another person or event to control your emotions.", author: "Unknown" },
-      { category: "💼 Hustle", text: "Dream big. Work hard. Stay humble.", author: "Unknown" },
-      { category: "🔥 Passion", text: "Be fearless in the pursuit of what sets your soul on fire.", author: "Jennifer Lee" },
-      { category: "🌟 Inspiration", text: "Stars can’t shine without darkness.", author: "Unknown" },
-      { category: "🧠 Wisdom", text: "Knowing yourself is the beginning of all wisdom.", author: "Aristotle" }
-    ];
+    const quotes = {
+      motivational: [
+        "Push yourself, because no one else is going to do it for you.",
+        "Don’t stop when you’re tired. Stop when you’re done.",
+        "Stay hungry, stay foolish."
+      ],
+      love: [
+        "Love is not what you say. Love is what you do.",
+        "You are my today and all of my tomorrows."
+      ],
+      funny: [
+        "I’m not lazy, I’m on energy-saving mode.",
+        "Life is short. Smile while you still have teeth!"
+      ]
+    };
 
-    const quoteEl = document.getElementById("quote");
-    const authorEl = document.getElementById("author");
-    const categoryEl = document.getElementById("category");
-    const toast = document.getElementById("toast");
-    let current = 0;
+    let currentCategory = 'motivational';
+    let currentIndex = 0;
 
-    function renderQuote(i) {
-      const q = quotes[i];
-      quoteEl.style.opacity = 0;
-      authorEl.style.opacity = 0;
-      categoryEl.style.opacity = 0;
+    const quoteEl = document.getElementById('quote');
+    const categoryEl = document.getElementById('category');
+    const heartEl = document.getElementById('heart');
+    const favMsg = document.getElementById('favMsg');
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      const catQuotes = quotes[currentCategory];
+      currentIndex = (currentIndex + 1) % catQuotes.length;
+      quoteEl.textContent = `"${catQuotes[currentIndex]}"`;
+      categoryEl.textContent = currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
+    });
+
+    document.getElementById('randomBtn').addEventListener('click', () => {
+      const allQuotes = Object.entries(quotes);
+      const [randCat, catQuotes] = allQuotes[Math.floor(Math.random() * allQuotes.length)];
+      const randQuote = catQuotes[Math.floor(Math.random() * catQuotes.length)];
+      quoteEl.textContent = `"${randQuote}"`;
+      categoryEl.textContent = randCat.charAt(0).toUpperCase() + randCat.slice(1);
+      currentCategory = randCat;
+      currentIndex = catQuotes.indexOf(randQuote);
+    });
+
+    heartEl.addEventListener('click', () => {
+      heartEl.classList.toggle('liked');
+      favMsg.style.display = 'block';
+      favMsg.style.animation = 'glow 1s ease';
       setTimeout(() => {
-        quoteEl.textContent = `"${q.text}"`;
-        authorEl.textContent = `- ${q.author}`;
-        categoryEl.textContent = q.category;
-        quoteEl.style.opacity = 1;
-        authorEl.style.opacity = 1;
-        categoryEl.style.opacity = 1;
-      }, 400);
-    }
-
-    function nextQuote() {
-      current = (current + 1) % quotes.length;
-      renderQuote(current);
-    }
-
-    function randomQuote() {
-      const randomIndex = Math.floor(Math.random() * quotes.length);
-      current = randomIndex;
-      renderQuote(current);
-    }
-
-    function toggleLike(el) {
-      el.classList.toggle("liked");
-      showToast(el.classList.contains("liked") ? "💖 Added to Favorites!" : "💔 Removed from Favorites!");
-    }
-
-    function copyQuote() {
-      navigator.clipboard.writeText(`${quoteEl.textContent} ${authorEl.textContent}`);
-      showToast("📋 Quote copied!");
-    }
-
-    function shareQuote() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'QuotesVerse',
-          text: `${quoteEl.textContent} ${authorEl.textContent}`,
-          url: window.location.href,
-        });
-      } else {
-        showToast("⚠️ Sharing not supported!");
-      }
-    }
-
-    function showToast(msg) {
-      toast.textContent = msg;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 1500);
-    }
+        favMsg.style.display = 'none';
+      }, 1200);
+    });
   </script>
+
 </body>
 </html>
