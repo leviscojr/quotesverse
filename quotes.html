@@ -125,7 +125,7 @@
       opacity: 1;
     }
 
-    .next-btn, .all-btn {
+    .next-btn, .random-btn {
       background: linear-gradient(45deg, var(--neon1), var(--neon2));
       border: none;
       border-radius: 50px;
@@ -138,7 +138,7 @@
       margin: 0.3rem;
     }
 
-    .next-btn:hover, .all-btn:hover {
+    .next-btn:hover, .random-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 0 25px var(--neon2);
     }
@@ -187,7 +187,7 @@
     </div>
 
     <button class="next-btn" onclick="nextQuote()">Next Quote</button>
-    <button class="all-btn" onclick="showAllQuotes()">All Quotes</button>
+    <button class="random-btn" onclick="randomQuote()">Random Quote</button>
 
     <div id="toast" class="toast">Added to Favorites!</div>
   </div>
@@ -199,6 +199,9 @@
       { category: "🏆 Success", text: "Don’t watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
       { category: "🧘 Peace", text: "Inner peace begins the moment you choose not to allow another person or event to control your emotions.", author: "Unknown" },
       { category: "💼 Hustle", text: "Dream big. Work hard. Stay humble.", author: "Unknown" },
+      { category: "🔥 Passion", text: "Be fearless in the pursuit of what sets your soul on fire.", author: "Jennifer Lee" },
+      { category: "🌟 Inspiration", text: "Stars can’t shine without darkness.", author: "Unknown" },
+      { category: "🧠 Wisdom", text: "Knowing yourself is the beginning of all wisdom.", author: "Aristotle" }
     ];
 
     const quoteEl = document.getElementById("quote");
@@ -227,6 +230,12 @@
       renderQuote(current);
     }
 
+    function randomQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      current = randomIndex;
+      renderQuote(current);
+    }
+
     function toggleLike(el) {
       el.classList.toggle("liked");
       showToast(el.classList.contains("liked") ? "💖 Added to Favorites!" : "💔 Removed from Favorites!");
@@ -247,11 +256,6 @@
       } else {
         showToast("⚠️ Sharing not supported!");
       }
-    }
-
-    function showAllQuotes() {
-      let all = quotes.map(q => `${q.category}\n${q.text}\n${q.author}`).join("\n\n");
-      alert(all);
     }
 
     function showToast(msg) {
